@@ -74,7 +74,7 @@
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/sw.js')
+                navigator.serviceWorker.register('./sw.js')
                     .then(registration => {
                         console.log('Service Worker registered with scope:', registration.scope);
                     })
@@ -121,7 +121,6 @@
                 </div>
             </div>
         </nav>
-        <!-- Removed Header Ad (was AdSense) -->
     </header>
 
     <!-- Hero Section -->
@@ -148,7 +147,6 @@
                         <a class="nav-link" href="#" onclick="pdfToImages()"><i class="fas fa-file-image"></i> PDF to Images</a>
                     </nav>
                 </div>
-                <!-- Removed Sidebar Ads (were AdSense) -->
             </div>
 
             <!-- Upload Section -->
@@ -175,7 +173,9 @@
                 </div>
             </div>
 
-            <!-- Removed Right Sidebar Ad (was AdSense) -->
+            <!-- Right Sidebar (Removed Ad Unit) -->
+            <div class="col-lg-3 mb-4">
+            </div>
         </div>
     </main>
 
@@ -184,12 +184,10 @@
         <div class="modal-dialog modal-xl">
             <div class="modal-content">
                 <div class="modal-body">
-                    <!-- Removed Left Ad Unit (was AdSense) -->
                     <button class="close-btn" data-bs-dismiss="modal">×</button>
                     <div class="preview-container">
                         <div id="previewContent"></div>
                     </div>
-                    <!-- Removed Right Ad Unit (was AdSense) -->
                 </div>
             </div>
         </div>
@@ -249,7 +247,6 @@
                     </div>
                 </div>
             </div>
-            <!-- Removed Footer Ad Unit (was AdSense) -->
             <div class="text-center mt-4">
                 <p class="mb-0">© 2025 PDFPro. All rights reserved.</p>
             </div>
