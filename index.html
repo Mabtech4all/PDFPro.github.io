@@ -1,43 +1,4 @@
-<script type="text/javascript">
-        var gk_isXlsx = false;
-        var gk_xlsxFileLookup = {};
-        var gk_fileData = {};
-        function filledCell(cell) {
-          return cell !== '' && cell != null;
-        }
-        function loadFileData(filename) {
-        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
-            try {
-                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
-                var firstSheetName = workbook.SheetNames[0];
-                var worksheet = workbook.Sheets[firstSheetName];
-
-                // Convert sheet to JSON to filter blank rows
-                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
-                // Filter out blank rows (rows where all cells are empty, null, or undefined)
-                var filteredData = jsonData.filter(row => row.some(filledCell));
-
-                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
-                var headerRowIndex = filteredData.findIndex((row, index) =>
-                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
-                );
-                // Fallback
-                if (headerRowIndex === -1 || headerRowIndex > 25) {
-                  headerRowIndex = 0;
-                }
-
-                // Convert filtered JSON back to CSV
-                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
-                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
-                return csv;
-            } catch (e) {
-                console.error(e);
-                return "";
-            }
-        }
-        return gk_fileData[filename] || "";
-        }
-        </script><!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -46,34 +7,34 @@
     <meta name="keywords" content="PDF editor, PDF converter, merge PDF, compress PDF, image to PDF, online PDF tools">
     <meta name="author" content="PDFPro">
     <meta name="robots" content="index, follow">
-    <!-- Monetag Meta Tag for Ad Monetization -->
     <meta name="monetag" content="2e1a33d1a20cdf88022cd1d4046a819c">
+    
     <!-- Open Graph -->
     <meta property="og:title" content="PDFPro - Powerful PDF & Image Tools Online">
     <meta property="og:description" content="Merge, compress, and convert PDFs and images with PDFPro. Fast, secure, and free online tool.">
     <meta property="og:image" content="https://pdfpro.example.com/og-image.jpg">
     <meta property="og:url" content="https://pdfpro.example.com">
     <meta property="og:type" content="website">
+    
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="PDFPro - Powerful PDF & Image Tools Online">
     <meta name="twitter:description" content="Merge, compress, and convert PDFs and images with PDFPro. Fast, secure, and free.">
     <meta name="twitter:image" content="https://pdfpro.example.com/twitter-image.jpg">
+    
     <title>PDFPro - Powerful PDF & Image Tools Online</title>
+    
     <!-- External CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="stylesheet" href="styles.css">
-    <!-- External JS -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+    
+    <!-- External JavaScript -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
     <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/interactjs@1.10.27/dist/interact.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-    <script src="script.js"></script>
-    <!-- Monetag Ad Script (Replace with actual script from Monetag dashboard) -->
-    <script async src="https://monetag.com/ad-script.js"></script>
+    
     <!-- Schema.org Structured Data -->
     <script type="application/ld+json">
     {
@@ -116,8 +77,8 @@
     <!-- Hero Section -->
     <section class="hero-section">
         <div class="container">
-            <h1 class="display-3 fw-bold mb-4">Master Your PDFs & Images</h1>
-            <p class="lead mb-5">Merge, convert, watermark, and more with PDFPro. Free, fast, and secure!</p>
+            <h1 class="display-3 fw-bold mb-4">Transform Your PDFs & Images</h1>
+            <p class="lead mb-5">Merge, compress, convert, and edit with PDFPro. Fast, secure, and completely free!</p>
         </div>
     </section>
 
@@ -129,12 +90,12 @@
                 <div class="sidebar">
                     <h5 class="mb-4 fw-bold">PDF Tools</h5>
                     <nav class="nav flex-column">
-                        <a class="nav-link" href="#" onclick="convertWordToPDF()"><i class="fas fa-file-word"></i> Convert Word to PDF</a>
-                        <a class="nav-link" href="#" onclick="imageToPDF()"><i class="fas fa-image"></i> Image to PDF</a>
-                        <a class="nav-link" href="#" onclick="addWatermark()"><i class="fas fa-stamp"></i> Add Watermark</a>
-                        <a class="nav-link" href="#" onclick="unlockPDF()"><i class="fas fa-lock-open"></i> Unlock PDF</a>
-                        <a class="nav-link" href="#" onclick="compressToMail()"><i class="fas fa-envelope"></i> Compress to Mail</a>
-                        <a class="nav-link" href="#" onclick="pdfToImages()"><i class="fas fa-file-image"></i> PDF to Images</a>
+                        <a class="nav-link" href="#" data-action="word-to-pdf"><i class="fas fa-file-word"></i> Convert Word to PDF</a>
+                        <a class="nav-link" href="#" data-action="image-to-pdf"><i class="fas fa-image"></i> Image to PDF</a>
+                        <a class="nav-link" href="#" data-action="add-watermark"><i class="fas fa-stamp"></i> Add Watermark</a>
+                        <a class="nav-link" href="#" data-action="unlock-pdf"><i class="fas fa-lock-open"></i> Unlock PDF</a>
+                        <a class="nav-link" href="#" data-action="compress-to-mail"><i class="fas fa-envelope"></i> Compress to Mail</a>
+                        <a class="nav-link" href="#" data-action="pdf-to-images"><i class="fas fa-file-image"></i> PDF to Images</a>
                     </nav>
                 </div>
             </div>
@@ -145,27 +106,26 @@
                     <h3 class="text-center mb-4 fw-bold">Upload PDFs or Images</h3>
                     <div class="drag-drop-zone mb-4" id="dragDropZone">
                         <input type="file" id="fileInput" multiple accept=".pdf,image/*" class="d-none">
-                        <i class="fas fa-cloud-upload-alt fa-4x text-muted mb-3"></i>
-                        <p class="mb-2 fw-semibold">Drag and drop PDFs or images here</p>
-                        <button class="btn btn-custom" onclick="document.getElementById('fileInput').click()">Choose Files</button>
+                        <i class="fas fa-cloud-upload-alt fa-3x text-muted mb-3"></i>
+                        <p class="mb-2">Drag and drop PDFs or images here</p>
+                        <button class="btn btn-primary btn-custom" onclick="document.getElementById('fileInput').click()">Choose Files</button>
                     </div>
                     <div id="fileList" class="mt-4"></div>
                     <div class="text-center mb-4">
                         <input type="text" id="pageRangeInput" class="form-control page-range-input" placeholder="e.g., 1-3,5" aria-label="Page range">
-                        <button class="btn btn-custom mt-2" onclick="applyPageRange()">Apply Page Range</button>
+                        <button class="btn btn-warning btn-custom mt-2" onclick="applyPageRange()">Apply Page Range</button>
                     </div>
                     <div id="previewList" class="mt-4"></div>
                     <div class="text-center mt-4">
-                        <button class="btn btn-custom me-2" id="mergeBtn" onclick="mergeFiles()">Merge Files</button>
-                        <button class="btn btn-custom me-2" id="compressBtn" onclick="compressFiles()">Compress Files</button>
-                        <button class="btn btn-custom" id="saveBtn" onclick="savePDF()">Save PDF</button>
+                        <button class="btn btn-success btn-custom me-2" onclick="mergeFiles()">Merge Files</button>
+                        <button class="btn btn-info btn-custom me-2" onclick="compressFiles()">Compress Files</button>
+                        <button class="btn btn-primary btn-custom" onclick="savePDF()">Save PDF</button>
                     </div>
                 </div>
             </div>
 
             <!-- Right Sidebar -->
-            <div class="col-lg-3 mb-4">
-            </div>
+            <div class="col-lg-3 mb-4"></div>
         </div>
     </main>
 
@@ -173,10 +133,9 @@
     <div class="modal fade modal-fullscreen" id="previewModal" tabindex="-1" aria-labelledby="previewModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-xl">
             <div class="modal-content">
-                <div class="modal-body">
-                    <button class="close-btn" data-bs-dismiss="modal">×</button>
-                    <div class="preview-container">
-                        <div id="previewContent"></div>
+                <div class="modal-body d-flex justify-content-center align-items-center p-4">
+                    <div class="preview-container flex-grow-1 mx-4" style="max-width: 100%;">
+                        <div id="previewContent" class="d-flex justify-content-center align-items-center"></div>
                     </div>
                 </div>
             </div>
@@ -189,7 +148,7 @@
             <div class="row">
                 <div class="col-md-4 mb-4">
                     <h5 class="fw-bold mb-3">About PDFPro</h5>
-                    <p class="text-muted">PDFPro is your ultimate online solution for editing, converting, and managing PDFs and images with ease.</p>
+                    <p class="text-muted">PDFPro is your go-to online tool for editing, converting, and managing PDFs and images. Fast, secure, and free!</p>
                 </div>
                 <div class="col-md-2 mb-4">
                     <h5 class="fw-bold mb-3">Features</h5>
@@ -214,7 +173,7 @@
                     <form class="newsletter-form mb-3">
                         <div class="input-group">
                             <input type="email" class="form-control" placeholder="Your email" aria-label="Email for newsletter">
-                            <button class="btn btn-custom" type="button" onclick="alert('Newsletter signup: Placeholder')">Subscribe</button>
+                            <button class="btn btn-primary" type="button" onclick="alert('Newsletter signup: Placeholder')">Subscribe</button>
                         </div>
                     </form>
                     <div class="social-icons">
@@ -226,9 +185,20 @@
                 </div>
             </div>
             <div class="text-center mt-4">
-                <p class="mb-0">© 2025 PDFPro. All rights reserved.</p>
+                <p class="mb-0">&copy; 2025 PDFPro. All rights reserved.</p>
             </div>
         </div>
     </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Custom JavaScript -->
+    <script src="js/config.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/pdf-handler.js"></script>
+    <script src="js/drag-drop.js"></script>
+    <script src="js/ui-handler.js"></script>
+    <script src="js/main.js"></script>
 </body>
-</html>
+</html> 
